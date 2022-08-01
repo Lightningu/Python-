@@ -1,0 +1,56 @@
+# !/usr/bin/env python
+# -*-coding:utf-8 -*-
+''''''
+from selenium import webdriver
+import datetime, time
+
+# 启动浏览器
+diver = webdriver.Chrome()
+# 浏览器窗口最大化
+diver.maximize_window()
+
+diver.get('https://www.taobao.com/')
+
+if diver.find_element_by_partial_link_text('亲，请登录'):
+    # 模糊匹配，到登录按钮
+    diver.find_element_by_partial_link_text('亲，请登录').click()
+
+# 密码账号登入
+# diver.find_element_by_xpath('//*[@id="fm-login-id"]').send_keys('')
+# time.sleep(2)
+# diver.find_element_by_xpath('//*[@id="fm-login-password"]').send_keys('')
+# time.sleep(2)
+# diver.find_element_by_xpath('//*[@id="login-form"]/div[4]/button').click()
+# 扫码登录
+time.sleep(5)
+diver.find_element_by_xpath('//*[@id="login"]/div[1]/i').click()
+
+# 进入购物车页面
+time.sleep(15)
+diver.get('https://cart.taobao.com/cart.htm')
+
+# 将购物车中的商品进行全选
+time.sleep(10)
+diver.find_element_by_xpath('//*[@id="J_SelectAll1"]/div/label').click()
+
+
+# 付款
+
+def buy(buytime):
+    while True:
+        # 获取当前的时间
+        time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+        # 进行当前时间和抢购时间的对比,到时间了开始抢购
+        if time >= buytime:
+            # 到时间了点击结算按钮
+            try:
+                diver.find_element_by_partial_link_text('结 算').click()
+                # diver.find_element_by_xpath('//*[@id="J_SmallSubmit"]').click()
+            except:
+                pass
+
+time.sleep(1)
+if __name__ == '__main__':
+    # 设置要抢购的时间
+    buytime = '2022-07-28 17:05:00'
+    buy(buytime)
